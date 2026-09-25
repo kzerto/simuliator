@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="vk-mini-app" content="true">
-<title>Симулятор Киберспортсмена v20</title>
+<title>Симулятор Киберспортсмена v21</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{overscroll-behavior:none;touch-action:manipulation;height:100%}
-body{font-family:'Segoe UI',Arial,sans-serif;background:radial-gradient(ellipse at top,#1a0a2a,#0a0a12 60%,#050508);color:#fff;text-align:center;margin:0;padding:4px;user-select:none;-webkit-user-select:none;min-height:100%}
+html{background:#0a0a12;height:100%}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0a0a12;background-image:radial-gradient(ellipse at top,#1a0a2a,#0a0a12 60%,#050508);background-attachment:fixed;background-size:100% 100%;color:#fff;text-align:center;margin:0;padding:4px;user-select:none;-webkit-user-select:none;min-height:100%}
 h1{background:linear-gradient(90deg,#00ffcc,#ff00e6,#00ffcc);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shine 3s linear infinite;font-size:15px;margin:2px 0}
 @keyframes shine{to{background-position:200% center}}
 .game-layout{display:flex;justify-content:center;gap:10px;max-width:1240px;margin:0 auto;align-items:flex-start}
@@ -19,6 +19,20 @@ h1{background:linear-gradient(90deg,#00ffcc,#ff00e6,#00ffcc);background-size:200
 .tab-btn{flex:1;background:#1a1a2e;color:#888;border:1.5px solid #2a2a3a;padding:7px 3px;font-weight:bold;border-radius:6px;cursor:pointer;font-size:11px;font-family:inherit;min-height:34px}
 .tab-btn.active{background:linear-gradient(90deg,#00ffcc,#00aaff);color:#0a0a12;border-color:transparent}
 canvas{position:absolute;top:0;left:0;width:100%;height:100%;background:#0a0a18;display:block;cursor:pointer;touch-action:none;image-rendering:auto}
+
+/* ═══ СТРОКА ШКАЛ ПОД КАНВАСОМ ═══ */
+.stats-strip{display:flex;gap:4px;margin-top:6px;padding:6px 5px;background:linear-gradient(180deg,rgba(10,10,20,.95),rgba(20,10,26,.95));border-radius:8px;border:1px solid #2a2a3a}
+.stat-mini{flex:1;min-width:0;text-align:center;padding:2px 2px 0}
+.stat-mini .sm-title{font-size:9px;color:#8a8aa0;letter-spacing:.3px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat-mini .sm-val{font-size:13px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
+.stat-mini .sm-bar{height:5px;background:rgba(255,255,255,.1);border-radius:3px;margin-top:3px;overflow:hidden}
+.stat-mini .sm-fill{height:100%;width:0;transition:width .15s;border-radius:3px}
+.sm-hunger-t{color:#aaee66}.sm-hunger-v{color:#aaee66}.sm-hunger-b{background:linear-gradient(90deg,#88dd44,#ccff88)}
+.sm-fatigue-t{color:#ffaa44}.sm-fatigue-v{color:#ffaa44}.sm-fatigue-b{background:linear-gradient(90deg,#ff9933,#ffcc66)}
+.sm-conf-t{color:#ff66cc}.sm-conf-v{color:#ff66cc}.sm-conf-b{background:linear-gradient(90deg,#ff00e6,#ff99dd)}
+.sm-skill-t{color:#66ccff}.sm-skill-v{color:#66ccff}.sm-skill-b{background:linear-gradient(90deg,#00aaff,#88ddff)}
+.sm-pop-t{color:#c084fc}.sm-pop-v{color:#c084fc}.sm-pop-b{background:linear-gradient(90deg,#a855f7,#e9d5ff)}
+
 .progress-wrap{background:#0a0a12;border:1px solid #2a2a3a;border-radius:4px;height:9px;overflow:hidden;margin:2px 0}
 .progress-bar{height:100%;width:0;transition:width .15s}
 .progress-text{font-size:9px;color:#8a8aa0}
@@ -43,14 +57,6 @@ canvas{position:absolute;top:0;left:0;width:100%;height:100%;background:#0a0a18;
 .stream-btn.on{background:linear-gradient(90deg,#ff3366,#ff00e6);color:#fff}
 .stream-btn.off{background:linear-gradient(90deg,#00ffcc,#00aaff);color:#0a0a12}
 .weapon-card{border:1.5px solid #ffcc00}.weapon-t{color:#ffdd44}.weapon-v{color:#ffdd44;font-size:11px;font-weight:900}
-.hunger-card{border:1.5px solid #88dd44}.hunger-t{color:#aaee66}.hunger-v{color:#aaee66}
-.hunger-b{background:linear-gradient(90deg,#88dd44,#ccff88)!important}
-.fat-card{border:1.5px solid #ff9933}.fat-t{color:#ffaa44}.fat-v{color:#ffaa44}
-.fat-b{background:linear-gradient(90deg,#ff9933,#ffcc66)!important}
-.conf-card{border:1.5px solid #ff00e6}.conf-t{color:#ff66cc}.conf-v{color:#ff66cc}
-.conf-b{background:linear-gradient(90deg,#ff00e6,#ff99dd)!important}
-.skill-card{border:1.5px solid #00aaff}.skill-t{color:#66ccff}.skill-v{color:#66ccff}
-.skill-b{background:linear-gradient(90deg,#00aaff,#88ddff)!important}
 .shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:4px}
 .shop-btn{background:linear-gradient(160deg,#1a1a2e,#16161f);border:1.5px solid #2a2a3a;color:#fff;padding:5px;border-radius:6px;cursor:pointer;text-align:left;font-size:10px;font-family:inherit;min-height:42px}
 .shop-btn:disabled{opacity:.4;cursor:not-allowed}
@@ -64,7 +70,6 @@ canvas{position:absolute;top:0;left:0;width:100%;height:100%;background:#0a0a18;
 .dirb{position:absolute;top:36px;left:50%;transform:translateX(-50%);background:rgba(180,140,0,.9);border:1.5px solid #ffcc00;border-radius:6px;padding:3px 11px;font-size:11px;font-weight:bold;color:#fff;z-index:5;display:none;pointer-events:none}
 .dirb.show{display:block}
 
-/* ═══ HUD ПОВЕРХ КАНВАСА ═══ */
 .hud{position:absolute;top:0;left:0;right:0;height:30px;display:flex;align-items:center;gap:6px;padding:0 6px;background:linear-gradient(180deg,rgba(0,0,0,.85),rgba(0,0,0,.4));z-index:6;font-size:11px;color:#fff;pointer-events:none;font-variant-numeric:tabular-nums}
 .hud>*{pointer-events:auto}
 .hud-left{display:flex;gap:7px;flex:1;white-space:nowrap;overflow:hidden}
@@ -94,12 +99,15 @@ canvas{position:absolute;top:0;left:0;width:100%;height:100%;background:#0a0a18;
   .card{margin-top:4px;padding:5px 7px}
   .mt{font-size:9px}
   .mv{font-size:13px}
-  .progress-wrap{height:8px;margin:2px 0}
   .ins{font-size:9px;margin-top:4px}
   .save-info{font-size:9px}
   .reset-btn{font-size:10px;padding:5px 10px;min-height:32px}
   .shop-btn{min-height:44px;font-size:10px}
   .buy-btn,.stream-btn{min-height:36px;padding:8px}
+  .stats-strip{padding:5px 4px;gap:3px;margin-top:4px}
+  .stat-mini .sm-title{font-size:8px}
+  .stat-mini .sm-val{font-size:12px}
+  .stat-mini .sm-bar{height:4px;margin-top:2px}
 }
 @media (min-width:951px){
   .hud-panel-btn{display:none}
@@ -108,7 +116,7 @@ canvas{position:absolute;top:0;left:0;width:100%;height:100%;background:#0a0a18;
 </head>
 <body>
 
-<h1>🕹️ СИМУЛЯТОР КИБЕРСПОРТСМЕНА <span class="vb">v20</span></h1>
+<h1>🕹️ СИМУЛЯТОР КИБЕРСПОРТСМЕНА <span class="vb">v21</span></h1>
 <p class="rank-line">Ранг: <strong id="rank" style="color:#ffcc00">Нуб из компьютерного клуба</strong></p>
 
 <div class="game-layout">
@@ -119,13 +127,6 @@ canvas{position:absolute;top:0;left:0;width:100%;height:100%;background:#0a0a18;
 <div class="progress-wrap"><div class="progress-bar" id="pb" style="background:linear-gradient(90deg,#00ffcc,#ff00e6)"></div></div>
 <p class="progress-text" id="pt">0 / 30</p>
 <p style="margin:2px 0">💰 <b class="sv" id="mon">30</b> ₽ ⚡ <b class="sv" id="pw">1</b></p>
-
-<div class="card pop-card">
-<div class="mt pop-t"><span>🌟 ПОПУЛЯРНОСТЬ</span><span id="pop-m">×1.00</span></div>
-<div class="mv pop-v" id="pop-v">0%</div>
-<div class="progress-wrap"><div class="progress-bar pop-b" id="pop-b"></div></div>
-<div class="progress-text" id="pop-h">Никто тебя не знает</div>
-</div>
 
 <div class="card club-card">
 <div class="mt club-t"><span>🏢 КЛУБ</span><span id="club-st">Аренда</span></div>
@@ -151,33 +152,9 @@ canvas{position:absolute;top:0;left:0;width:100%;height:100%;background:#0a0a18;
 <div class="weapon-v" id="wp-n">Пистолет</div>
 </div>
 
-<div class="card hunger-card">
-<div class="mt hunger-t"><span>🍔 СЫТОСТЬ</span><span id="hg-m">×1.00</span></div>
-<div class="mv hunger-v" id="hg-v">100%</div>
-<div class="progress-wrap"><div class="progress-bar hunger-b" id="hg-b"></div></div>
-</div>
-
-<div class="card fat-card">
-<div class="mt fat-t"><span>💤 УСТАЛОСТЬ</span><span id="ft-m">×1.00</span></div>
-<div class="mv fat-v" id="ft-v">0%</div>
-<div class="progress-wrap"><div class="progress-bar fat-b" id="ft-b"></div></div>
-</div>
-
-<div class="card conf-card">
-<div class="mt conf-t"><span>💪 УВЕРЕННОСТЬ</span><span id="cf-m">×1.00</span></div>
-<div class="mv conf-v" id="cf-v">0%</div>
-<div class="progress-wrap"><div class="progress-bar conf-b" id="cf-b"></div></div>
-</div>
-
-<div class="card skill-card">
-<div class="mt skill-t"><span>🎮 СКИЛ</span><span id="sk-m">×1.00</span></div>
-<div class="mv skill-v" id="sk-v">70%</div>
-<div class="progress-wrap"><div class="progress-bar skill-b" id="sk-b"></div></div>
-</div>
-
 <h3 style="margin:6px 0 2px;font-size:12px">🛒 Магазин</h3>
 <div class="shop-grid" id="shop"></div>
-<p class="ins">💡 Старт: 30 ₽. Иди на улицу собирать мусор, еда — 8 ₽.</p>
+<p class="ins">💡 Старт: 30 ₽. Собери мусор на улице, купи еду за 8 ₽.</p>
 <p class="save-info" id="save-info">Сохранений ещё нет</p>
 <button class="reset-btn" id="reset-btn">🔄 Сбросить</button>
 </div>
@@ -204,6 +181,36 @@ canvas{position:absolute;top:0;left:0;width:100%;height:100%;background:#0a0a18;
 <div class="dirb" id="dirb">👔 ДИРЕКТОР</div>
 <canvas id="cv" width="800" height="500"></canvas>
 </div>
+
+<!-- ═══ ШКАЛЫ ПОД КАНВАСОМ ═══ -->
+<div class="stats-strip">
+  <div class="stat-mini">
+    <div class="sm-title sm-hunger-t">🍔 СЫТ</div>
+    <div class="sm-val sm-hunger-v" id="ms-hunger">100%</div>
+    <div class="sm-bar"><div class="sm-fill sm-hunger-b" id="ms-hunger-b"></div></div>
+  </div>
+  <div class="stat-mini">
+    <div class="sm-title sm-fatigue-t">💤 УСТ</div>
+    <div class="sm-val sm-fatigue-v" id="ms-fatigue">0%</div>
+    <div class="sm-bar"><div class="sm-fill sm-fatigue-b" id="ms-fatigue-b"></div></div>
+  </div>
+  <div class="stat-mini">
+    <div class="sm-title sm-conf-t">💪 УВЕР</div>
+    <div class="sm-val sm-conf-v" id="ms-conf">0%</div>
+    <div class="sm-bar"><div class="sm-fill sm-conf-b" id="ms-conf-b"></div></div>
+  </div>
+  <div class="stat-mini">
+    <div class="sm-title sm-skill-t">🎮 СКИЛ</div>
+    <div class="sm-val sm-skill-v" id="ms-skill">70%</div>
+    <div class="sm-bar"><div class="sm-fill sm-skill-b" id="ms-skill-b"></div></div>
+  </div>
+  <div class="stat-mini">
+    <div class="sm-title sm-pop-t">🌟 ПОП</div>
+    <div class="sm-val sm-pop-v" id="ms-pop">0%</div>
+    <div class="sm-bar"><div class="sm-fill sm-pop-b" id="ms-pop-b"></div></div>
+  </div>
+</div>
+
 </div>
 </div>
 
@@ -218,7 +225,7 @@ function SE(m){eB.style.display='block';eB.textContent='⚠ '+m;console.error(m)
 window.onerror=function(m,u,l,c){SE(m+' @ '+l+':'+c);return false;};
 function safe(f,n){try{f();}catch(e){SE(n+': '+e.message);}}
 
-/* ═══ ПАНЕЛЬ-ОВЕРЛЕЙ ═══ */
+/* ═══ ПАНЕЛЬ ═══ */
 const panelEl=document.getElementById('stats-panel');
 const toggleBtn=document.getElementById('panel-toggle');
 const closeBtn=document.getElementById('panel-close');
@@ -261,8 +268,8 @@ const AMBP=1000,AMBD=3500,AMBC=12000;
 const CLUBP=100000,WS=8,CR=15,CE=5,TOTEX=WS+CR+CE,WBI=30,WED=0.9;
 const POPM=100,PGST=0.35,PGV=0.03;
 const START_MONEY=30;
-const SAVE_KEY='cyber_v20_save';
-const LEGACY_KEYS=['cyber_v19_save','cyber_v18_save','cyber_v17_save','cyber_v16_save','cyber_v15_save','cyber_v14c_save','cyber_v14b_save'];
+const SAVE_KEY='cyber_v21_save';
+const LEGACY_KEYS=['cyber_v20_save','cyber_v19_save','cyber_v18_save','cyber_v17_save','cyber_v16_save','cyber_v15_save','cyber_v14c_save','cyber_v14b_save'];
 const SAVE_INTERVAL=10000;
 const MAX_DPR=2;
 
@@ -336,8 +343,8 @@ const wp={x:400,y:320};
 let trash=[],clients=[],particles=[],floats=[],stars=[],bubbles=[];
 
 function migrateSave(raw){try{const d=JSON.parse(raw);if(!d||!d.v)return null;
-if(d.v==='14b'||d.v==='14c'||d.v==='15'||d.v==='16'||d.v==='17'||d.v==='18'||d.v==='19'){
-d.v='20';
+if(['14b','14c','15','16','17','18','19','20'].indexOf(d.v)>=0){
+d.v='21';
 if(d.viewerHappiness==null)d.viewerHappiness=70;
 if(d.popularity==null)d.popularity=0;
 if(d.workerEff==null)d.workerEff=100;
@@ -345,9 +352,9 @@ if(d.totServed==null)d.totServed=0;
 if(d.totAngry==null)d.totAngry=0;
 if(d.totAmb==null)d.totAmb=0;
 if(d.prevW==null)d.prevW='Пистолет';}
-if(d.v!=='20')return null;return d;}catch(e){return null;}}
+if(d.v!=='21')return null;return d;}catch(e){return null;}}
 function saveGame(){try{
-const d={v:'20',ts:Date.now(),aim,money,confidence,fatigue,skill,hunger,
+const d={v:'21',ts:Date.now(),aim,money,confidence,fatigue,skill,hunger,
 viewerHappiness,popularity,clubOwned,workerEff:worker.eff,
 upg:Object.fromEntries(Object.entries(upg).map(([k,v])=>[k,{lvl:v.lvl}])),
 lastL,totServed,totAngry,totAmb,prevW};
@@ -444,42 +451,35 @@ if(!muted){eA();if(ac&&mP){mN=ac.currentTime+.1;mBN=mN;}}});
 const cv=document.getElementById('cv');
 const ctx=cv.getContext('2d');
 
-/* ═══ РАЗМЕР КАНВАСА С УЧЁТОМ DPR (для чёткости) ═══ */
 function setupCanvas(){
 const dpr=Math.min(window.devicePixelRatio||1,MAX_DPR);
-cv.width=W*dpr;
-cv.height=H*dpr;
+cv.width=W*dpr;cv.height=H*dpr;
 ctx.setTransform(dpr,0,0,dpr,0,0);
 }
 setupCanvas();
 let resizeT=0;
-window.addEventListener('resize',()=>{
-clearTimeout(resizeT);
-resizeT=setTimeout(setupCanvas,150);
-});
+window.addEventListener('resize',()=>{clearTimeout(resizeT);resizeT=setTimeout(setupCanvas,150);});
 
 const U={
 aim:document.getElementById('aim'),mon:document.getElementById('mon'),pw:document.getElementById('pw'),
 rank:document.getElementById('rank'),lvl:document.getElementById('lvl'),pb:document.getElementById('pb'),pt:document.getElementById('pt'),
-cfv:document.getElementById('cf-v'),cfb:document.getElementById('cf-b'),cfm:document.getElementById('cf-m'),
-ftv:document.getElementById('ft-v'),ftb:document.getElementById('ft-b'),ftm:document.getElementById('ft-m'),
-hgv:document.getElementById('hg-v'),hgb:document.getElementById('hg-b'),hgm:document.getElementById('hg-m'),
 wpn:document.getElementById('wp-n'),wpb:document.getElementById('wp-b'),
 jn:document.getElementById('job-n'),ji:document.getElementById('job-i'),
-skv:document.getElementById('sk-v'),skb:document.getElementById('sk-b'),skm:document.getElementById('sk-m'),
 tC:document.getElementById('tabC'),tS:document.getElementById('tabS'),
 qb:document.getElementById('qb'),lb:document.getElementById('lb'),dirb:document.getElementById('dirb'),
 sc:document.getElementById('stream-card'),vhv:document.getElementById('vhv'),vhb:document.getElementById('vhb'),
 vc:document.getElementById('vc'),st:document.getElementById('st'),
-pv:document.getElementById('pop-v'),pbar:document.getElementById('pop-b'),pm:document.getElementById('pop-m'),ph:document.getElementById('pop-h'),
 cst:document.getElementById('club-st'),cv2:document.getElementById('club-v'),
 cexp:document.getElementById('club-exp'),bc:document.getElementById('buy-club'),
 /* HUD */
-hMon:document.getElementById('hud-mon'),
-hLvl:document.getElementById('hud-lvl'),
-hAim:document.getElementById('hud-aim'),
-hPw:document.getElementById('hud-pw'),
-hPb:document.getElementById('hud-pb')};
+hMon:document.getElementById('hud-mon'),hLvl:document.getElementById('hud-lvl'),
+hAim:document.getElementById('hud-aim'),hPw:document.getElementById('hud-pw'),hPb:document.getElementById('hud-pb'),
+/* STRIP */
+msHunger:document.getElementById('ms-hunger'),msHungerB:document.getElementById('ms-hunger-b'),
+msFatigue:document.getElementById('ms-fatigue'),msFatigueB:document.getElementById('ms-fatigue-b'),
+msConf:document.getElementById('ms-conf'),msConfB:document.getElementById('ms-conf-b'),
+msSkill:document.getElementById('ms-skill'),msSkillB:document.getElementById('ms-skill-b'),
+msPop:document.getElementById('ms-pop'),msPopB:document.getElementById('ms-pop-b')};
 
 function initShop(){const s=document.getElementById('shop');s.innerHTML='';
 Object.keys(upg).forEach(k=>{const b=document.createElement('button');b.className='shop-btn';b.id='b-'+k;
@@ -507,8 +507,6 @@ shake=performance.now()+500;updUI();});
 
 function updUI(){
 U.aim.textContent=Math.floor(aim);U.mon.textContent=Math.floor(money);U.pw.textContent=tP().toFixed(2);
-U.pv.textContent=Math.floor(popularity)+'%';U.pbar.style.width=popularity+'%';U.pm.textContent='×'+popM().toFixed(2);
-U.ph.textContent=popularity>=80?'Ты звезда!':popularity>=50?'Тебя узнают':popularity>=20?'Первые фанаты':'Никто тебя не знает';
 if(clubOwned){U.cst.textContent='ВЛАДЕЛЕЦ ✓';U.cv2.textContent='Директор клуба';
 U.bc.style.display='none';U.cexp.style.display='block';
 const wi=wInc(),ne=wi-TOTEX;
@@ -523,10 +521,6 @@ U.sc.style.display=hasS()?'block':'none';
 if(hasS()){U.vhv.textContent=Math.floor(viewerHappiness)+'%';U.vhb.style.width=viewerHappiness+'%';U.vc.textContent=vCnt()+' 👁';
 U.st.textContent=streamActive?'⏹ СТОП':'▶ СТАРТ';U.st.className='stream-btn '+(streamActive?'on':'off');}
 U.lb.classList.toggle('show',streamActive);U.dirb.classList.toggle('show',clubOwned);
-U.cfv.textContent=Math.floor(confidence)+'%';U.cfb.style.width=confidence+'%';U.cfm.textContent='×'+cfM().toFixed(2);
-U.hgv.textContent=Math.floor(hunger)+'%';U.hgb.style.width=hunger+'%';U.hgm.textContent='×'+hgM().toFixed(2);
-U.ftv.textContent=Math.floor(fatigue)+'%';U.ftb.style.width=fatigue+'%';U.ftm.textContent='×'+ftM().toFixed(2);
-U.skv.textContent=Math.floor(skill)+'%';U.skb.style.width=skill+'%';U.skm.textContent='×'+skM().toFixed(2);
 const l=getL(aim);U.lvl.textContent=l;
 if(l>lastL){lvlU=performance.now()+1600;lvlL=l;shake=performance.now()+350;lastL=l;sfx.lvl();
 for(let i=0;i<40;i++)spawnPar(400,260,i%2?'#00ffcc':'#ff00e6',1,{spread:8,rise:6,decay:.014,size:3});
@@ -541,12 +535,22 @@ U.tS.textContent=(hasA()||clubOwned)?'💼 Клуб':'🌃 Улица';
 const q=clients.length;
 if((hasA()||clubOwned)&&q>0){U.qb.textContent='👥 '+q;U.qb.classList.add('show');}else{U.qb.classList.remove('show');}
 
-/* ═══ HUD ═══ */
-U.hMon.textContent=Math.floor(money);
-U.hLvl.textContent=l;
-U.hAim.textContent=Math.floor(aim);
-U.hPw.textContent=tP().toFixed(1);
+/* HUD */
+U.hMon.textContent=Math.floor(money);U.hLvl.textContent=l;
+U.hAim.textContent=Math.floor(aim);U.hPw.textContent=tP().toFixed(1);
 U.hPb.style.width=Math.max(0,Math.min(100,pct))+'%';
+
+/* STRIP */
+U.msHunger.textContent=Math.floor(hunger)+'%';
+U.msHungerB.style.width=hunger+'%';
+U.msFatigue.textContent=Math.floor(fatigue)+'%';
+U.msFatigueB.style.width=fatigue+'%';
+U.msConf.textContent=Math.floor(confidence)+'%';
+U.msConfB.style.width=confidence+'%';
+U.msSkill.textContent=Math.floor(skill)+'%';
+U.msSkillB.style.width=skill+'%';
+U.msPop.textContent=Math.floor(popularity)+'%';
+U.msPopB.style.width=popularity+'%';
 }
 
 function spawnPar(x,y,c,n,o){n=n||1;o=o||{};for(let i=0;i<n;i++)particles.push({x,y,vx:(Math.random()-.5)*(o.spread||2),vy:-(Math.random()*(o.rise||2)+.3),life:1,decay:o.decay||.02,color:c,size:(o.size||2)*(.6+Math.random()*.8)});}
@@ -642,7 +646,6 @@ if(amb)return;
 const r=cv.getBoundingClientRect();
 const cx=(ev.clientX-r.left)*(W/r.width);
 const cy=(ev.clientY-r.top)*(H/r.height);
-/* Если клик по верхней полосе HUD — игнорируем игровое поле */
 if(cy<H*(30/r.height))return;
 if(loc==='club'){const apc=getAPC();
 if(cx>=apc.x&&cx<=apc.x+apc.w&&cy>=apc.y&&cy<=apc.y+apc.h){tryPC(apc);return;}
@@ -915,8 +918,6 @@ ctx.globalAlpha=b.life*.5;ctx.strokeStyle='#88ccff';ctx.lineWidth=1;
 ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.stroke();}
 ctx.globalAlpha=1;}
 
-function dOverlays(now){/* badges перенесены в HTML HUD, canvas оверлеи не нужны */}
-
 function dLvl(now){if(now>=lvlU)return;
 const t=1-(lvlU-now)/1600,a=Math.max(0,1-t);
 ctx.fillStyle='rgba(0,255,204,'+(a*.18)+')';ctx.fillRect(0,0,W,H);
@@ -1046,7 +1047,7 @@ uiT+=dt;
 if(uiT>100){uiT=0;updUI();updShop();}
 if(performance.now()-lastSaveT>SAVE_INTERVAL&&!amb)saveGame();
 if(!amb)safe(()=>dPlayer(now),'dPlayer');
-safe(()=>dParticles(),'dP');safe(()=>dOverlays(now),'dOv');
+safe(()=>dParticles(),'dP');
 safe(()=>dLvl(now),'dLvl');safe(()=>dAmb(now),'dAmb');
 if(!amb){ctx.font='bold 11px Arial';ctx.textAlign='left';
 ctx.fillStyle='rgba(255,255,255,.5)';
