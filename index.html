@@ -26,6 +26,11 @@ canvas{position:absolute;top:0;left:0;width:100%;height:100%;background:#0a0a18;
 .stat-mini .sm-val{font-size:15px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
 .stat-mini .sm-bar{height:6px;background:rgba(255,255,255,.1);border-radius:3px;margin-top:4px;overflow:hidden}
 .stat-mini .sm-fill{height:100%;width:0;transition:width .15s;border-radius:3px}
+.stat-mini .sm-hint{font-size:9px;margin-top:4px;font-weight:700;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'JetBrains Mono','Consolas',monospace}
+.sm-hint.buff{color:#aaee66}
+.sm-hint.warn{color:#ffaa44}
+.sm-hint.debuff{color:#ff4466}
+.sm-hint.pop{color:#c084fc}
 .sm-hunger-t{color:#aaee66}.sm-hunger-v{color:#aaee66}.sm-hunger-b{background:linear-gradient(90deg,#88dd44,#ccff88)}
 .sm-fatigue-t{color:#ffaa44}.sm-fatigue-v{color:#ffaa44}.sm-fatigue-b{background:linear-gradient(90deg,#ff9933,#ffcc66)}
 .sm-conf-t{color:#ff66cc}.sm-conf-v{color:#ff66cc}.sm-conf-b{background:linear-gradient(90deg,#ff00e6,#ff99dd)}
@@ -182,26 +187,31 @@ canvas{position:absolute;top:0;left:0;width:100%;height:100%;background:#0a0a18;
     <div class="sm-title sm-hunger-t">🍔 СЫТОСТЬ</div>
     <div class="sm-val sm-hunger-v" id="ms-hunger">100%</div>
     <div class="sm-bar"><div class="sm-fill sm-hunger-b" id="ms-hunger-b"></div></div>
+    <div class="sm-hint buff" id="ms-hunger-h">↑ ×1.00 прокачка</div>
   </div>
   <div class="stat-mini">
     <div class="sm-title sm-fatigue-t">💤 УСТАЛОСТЬ</div>
     <div class="sm-val sm-fatigue-v" id="ms-fatigue">0%</div>
     <div class="sm-bar"><div class="sm-fill sm-fatigue-b" id="ms-fatigue-b"></div></div>
+    <div class="sm-hint buff" id="ms-fatigue-h">↑ ×1.00 прокачка</div>
   </div>
   <div class="stat-mini">
     <div class="sm-title sm-conf-t">💪 УВЕРЕННОСТЬ</div>
     <div class="sm-val sm-conf-v" id="ms-conf">0%</div>
     <div class="sm-bar"><div class="sm-fill sm-conf-b" id="ms-conf-b"></div></div>
+    <div class="sm-hint buff" id="ms-conf-h">↑ ×1.00 прокачка</div>
   </div>
   <div class="stat-mini">
     <div class="sm-title sm-skill-t">🎮 СКИЛ</div>
     <div class="sm-val sm-skill-v" id="ms-skill">70%</div>
     <div class="sm-bar"><div class="sm-fill sm-skill-b" id="ms-skill-b"></div></div>
+    <div class="sm-hint buff" id="ms-skill-h">↑ ×0.88 прокачка</div>
   </div>
   <div class="stat-mini">
     <div class="sm-title sm-pop-t">🌟 ПОПУЛЯРНОСТЬ</div>
     <div class="sm-val sm-pop-v" id="ms-pop">0%</div>
     <div class="sm-bar"><div class="sm-fill sm-pop-b" id="ms-pop-b"></div></div>
+    <div class="sm-hint pop" id="ms-pop-h">↑ ×1.00 зрители</div>
   </div>
 </div>
 
@@ -467,11 +477,23 @@ cst:document.getElementById('club-st'),cv2:document.getElementById('club-v'),
 cexp:document.getElementById('club-exp'),bc:document.getElementById('buy-club'),
 hMon:document.getElementById('hud-mon'),hLvl:document.getElementById('hud-lvl'),
 hAim:document.getElementById('hud-aim'),hPw:document.getElementById('hud-pw'),hPb:document.getElementById('hud-pb'),
-msHunger:document.getElementById('ms-hunger'),msHungerB:document.getElementById('ms-hunger-b'),
-msFatigue:document.getElementById('ms-fatigue'),msFatigueB:document.getElementById('ms-fatigue-b'),
-msConf:document.getElementById('ms-conf'),msConfB:document.getElementById('ms-conf-b'),
-msSkill:document.getElementById('ms-skill'),msSkillB:document.getElementById('ms-skill-b'),
-msPop:document.getElementById('ms-pop'),msPopB:document.getElementById('ms-pop-b')};
+msHunger:document.getElementById('ms-hunger'),msHungerB:document.getElementById('ms-hunger-b'),msHungerH:document.getElementById('ms-hunger-h'),
+msFatigue:document.getElementById('ms-fatigue'),msFatigueB:document.getElementById('ms-fatigue-b'),msFatigueH:document.getElementById('ms-fatigue-h'),
+msConf:document.getElementById('ms-conf'),msConfB:document.getElementById('ms-conf-b'),msConfH:document.getElementById('ms-conf-h'),
+msSkill:document.getElementById('ms-skill'),msSkillB:document.getElementById('ms-skill-b'),msSkillH:document.getElementById('ms-skill-h'),
+msPop:document.getElementById('ms-pop'),msPopB:document.getElementById('ms-pop-b'),msPopH:document.getElementById('ms-pop-h')};
+
+/* Подсказки на шкалах: показывают текущий множитель и куда влияет */
+function setHint(el,mult,label){
+  const m=mult;
+  let cls='sm-hint ',arrow='↑';
+  if(m>=0.95){cls+='buff';arrow='↑';}
+  else if(m>=0.70){cls+='warn';arrow='↓';}
+  else if(m>=0.40){cls+='debuff';arrow='↓';}
+  else{cls+='debuff';arrow='⚠';}
+  el.className=cls;
+  el.textContent=arrow+' ×'+m.toFixed(2)+' '+label;
+}
 
 function initShop(){const s=document.getElementById('shop');s.innerHTML='';
 Object.keys(upg).forEach(k=>{const b=document.createElement('button');b.className='shop-btn';b.id='b-'+k;
@@ -534,6 +556,12 @@ U.msFatigue.textContent=Math.floor(fatigue)+'%';U.msFatigueB.style.width=fatigue
 U.msConf.textContent=Math.floor(confidence)+'%';U.msConfB.style.width=confidence+'%';
 U.msSkill.textContent=Math.floor(skill)+'%';U.msSkillB.style.width=skill+'%';
 U.msPop.textContent=Math.floor(popularity)+'%';U.msPopB.style.width=popularity+'%';
+setHint(U.msHungerH,hgM(),'прокачка');
+setHint(U.msFatigueH,ftM(),'прокачка');
+setHint(U.msConfH,cfM(),'прокачка');
+setHint(U.msSkillH,skM(),'прокачка');
+U.msPopH.className='sm-hint pop';
+U.msPopH.textContent='↑ ×'+popM().toFixed(2)+' зрители';
 }
 
 function spawnPar(x,y,c,n,o){n=n||1;o=o||{};for(let i=0;i<n;i++)particles.push({x,y,vx:(Math.random()-.5)*(o.spread||2),vy:-(Math.random()*(o.rise||2)+.3),life:1,decay:o.decay||.02,color:c,size:(o.size||2)*(.6+Math.random()*.8)});}
